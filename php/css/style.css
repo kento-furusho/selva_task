@@ -1,0 +1,84 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  background-color: #E2EDF6;
+  border: 1px solid black;
+  width: 500px;
+  margin: 0 auto;
+  padding:  30px 45px;
+}
+.forms{
+  margin: 0 auto;
+  width: 440px;
+}
+.forms p {
+  margin: 16px 0;
+}
+.container h2 {
+  text-align: center;
+}
+.input_name {
+  width:143px;
+  margin: 15px;
+}
+.address_label {
+  margin-left: 30px;
+}
+
+.last_address_input {
+  width: 225px;
+}
+.form_last_3 {
+  width: 300px;
+}
+.btn-container {
+  text-align: center;
+}
+
+.btn {
+  background-color: #6495ed;
+  padding:8px 26px ;
+  border-radius: 10px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border-style: none;
+}
+
+/* 登録確認画面 */
+.content{
+  margin: 0 auto;
+  width: 350px;
+}
+.content p {
+  margin: 16px 0;
+}
+.back_btn {
+  background-color: white;
+  padding:8px 26px ;
+  margin-top: 10px;
+  border-radius: 10px;
+  color: #6495ed;
+  font-size: 15px;
+  font-weight: bold;
+  border:#6495ed 1px;
+}
+
+/* 会員登録完了画面 */
+.container_completed {
+  height: 401px;
+}
+.regist_completed {
+  text-align: center;
+}
+.regist_completed h2{
+  margin: 20px 0;
+  text-align: center;
+}
+.regist_completed p{
+  margin: 20px 0;
+  text-align: center;
+}
