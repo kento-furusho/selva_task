@@ -1,3 +1,24 @@
+<?php
+  session_start();
+
+  $_SESSION['family_name'] = $_POST['family_name'];
+  $_SESSION['given_name'] = $_POST['given_name'];
+  $_SESSION['gender'] = $_POST['gender'];
+  $_SESSION['pref_name'] = $_POST['pref_name'];
+  $_SESSION['last_address'] = $_POST['last_address'];
+  $_SESSION['mail'] = $_POST['mail'];
+
+  $family_name = $_SESSION['family_name'];
+  $given_name = $_SESSION['given_name'];
+  $gender = $_SESSION['gender'];
+  $pref_name = $_SESSION['pref_name'];
+  $last_address = $_SESSION['last_address'];
+  $mail = $_SESSION['mail'];
+
+  var_dump($family_name);
+  
+  // header("Location: member_regist_confirm.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,8 +46,10 @@
         <p>パスワード
           <?php echo 'セキュリティのため非表示'?>
         </p>
-        <p style='color: #6495ed;'>メールアドレス
-          <?php echo $_POST['mail']?>
+        <p>メールアドレス
+          <span style='color: #6495ed;'>
+            <?php echo $_POST['mail']?>
+          </span>
         </p>
       </div>
       <div class='btn-container'>
