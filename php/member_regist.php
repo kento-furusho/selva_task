@@ -1,12 +1,47 @@
 <?php
   session_start();
-  $family_name = $_SESSION['family_name'];
-  $given_name = $_SESSION['given_name'];
-  $gender = $_SESSION['gender'];
-  $pref_name = $_SESSION['pref_name'];
-  $last_address = $_SESSION['last_address'];
-  $mail = $_SESSION['mail'];
-  
+  if(!empty($_POST)){
+    $family_name = $_POST['family_name'];
+    $given_name = $_POST['given_name'];
+    $gender = $_POST['gender'];
+    $pref_name = $_POST['pref_name'];
+    $last_address = $_POST['last_address'];
+    $password = $_POST['password'];
+    $re_password = $_POST['re_password'];
+    $mail = $_POST['mail'];
+
+    var_dump($_POST['family_name']);
+
+    function validation($data) {
+      $err_msg = array();
+      if (empty($data['family_name']) || empty($data['given_name'])) {
+        $err_msg[] = '氏名を入力してください';
+      }
+      if (mb_strlen($data['family_name']) > 20) {
+        $err_msg[] = '苗字は20文字以内で入力してください';
+      }
+      if (mb_strlen($data['given_name']) > 20) {
+        $err_msg[] = '名前は20文字以内で入力してください';
+      }
+      return $err_msg;
+    }
+
+    global $err_messages;
+    $err_messages = validation($_POST);
+
+    if (empty($err_messages)) {
+      $_SESSION['family_name'] = $family_name;
+      $_SESSION['given_name'] = $given_name;
+      $_SESSION['gender'] = $gender;
+      $_SESSION['pref_name'] = $pref_name;
+      $_SESSION['last_address'] = $last_address;
+      $_SESSION['password'] = $password;
+      $_SESSION['re_password'] = $re_password;
+      $_SESSION['mail'] = $mail;
+      header("Location:member_regist_confirm.php");
+    }
+  }
+    
   $prefectures = array(
     1 => '北海道',
     2 => '青森県',
@@ -70,30 +105,43 @@
 </head>
 <body>
   <div class="container">
-    <form class='forms' method="post" action="member_regist_confirm.php">
+    <?php echo $err_mes ?>
+    <form class='forms' method="post" action="member_regist.php">
         <h2>会員情報登録フォーム</h2>
+        <div>
+          <?php
+            if(!empty($err_messages)) {
+              foreach ($err_messages as $err_msg) {
+                echo $err_msg.'<br/>';
+              }
+            }
+          ?>
+        </div>
         <p>氏名
           <label for="family_name">姓</label>
-          <input class='input_name' type="text" name='family_name' id='family_name' value="<?php if(!empty($_SESSION['family_name']) ){ echo $family_name; } ?>">
+          <input class='input_name' type="text" name='family_name' id='family_name' value="<?php if(!empty($family_name) ){ echo $family_name; } ?>">
           <label for="given_name">名</label>
-          <input class='input_name' type="text" name='given_name' id='given_name' value="<?php if(!empty($_SESSION['given_name']) ){ echo $given_name; } ?>">
+          <input class='input_name' type="text" name='given_name' id='given_name' value="<?php if(!empty($_POST['given_name']) ){ echo $_POST['given_name']; } ?>">
         </p>
         <p>性別
-          <input style="margin-left: 20px;" type="radio" name='gender' value='男性' <?php if (isset($_SESSION['gender']) && $_SESSION['gender'] == "男性") echo 'checked'; ?>>男性
-          <input type="radio" name='gender' value="女性" <?php if (isset($_SESSION['gender']) && $_SESSION['gender'] == "女性") echo 'checked'; ?>>女性
+          <input style="margin-left: 20px;" type="radio" name='gender' value='男性' 
+          <?php if (isset($_SESSION['gender']) && $_SESSION['gender'] == "男性") echo 'checked'; ?>>男性
+          <input type="radio" name='gender' value="女性" 
+          <?php if (isset($_SESSION['gender']) && $_SESSION['gender'] == "女性") echo 'checked'; ?>>女性
         </p>
         <p>住所
           <label>都道府県</label>
           <select name="pref_name">
             <option value="0">選択してください</option>
             <?php foreach($prefectures as $prefecture): ?>
-                <option value="<?php echo $prefecture ?>" <?php if(!empty($_SESSION['pref_name']) && $prefecture === $pref_name) echo 'selected'; ?>><?php echo $prefecture ?></option>
+                <option value="<?php echo $prefecture ?>"
+                <?php if(!empty($_SESSION['pref_name']) && $prefecture === $_SESSION['pref_name']) echo 'selected'; ?>><?php echo $prefecture ?>
             <?php endforeach; ?>
           </select>
         </p>
         <p style="margin-left: 38px;">
           <label for="last_address" class="address_label">それ以降の住所</label>
-          <input style="width: 237px;" type="text" name='last_address' id='family_name' value="<?php if(!empty($_SESSION['last_address']) ){ echo $last_address; } ?>">
+          <input style="width: 237px;" type="text" name='last_address' id='family_name' value="<?php if(!empty($_SESSION['last_address']) ){ echo $_SESSION['last_address']; } ?>">
         </p>
         <p>
           <label for="password">パスワード</label>
@@ -105,10 +153,10 @@
         </p>
         <p>
           <label for="mail">メールアドレス</label>
-          <input style="margin-left: 5px;" class='form_last_3' type="text" name='mail' id='mail' value="<?php if(!empty($_SESSION['mail']) ){ echo $mail; } ?>">
+          <input style="margin-left: 5px;" class='form_last_3' type="text" name='mail' id='mail' value="<?php if(!empty($_SESSION['mail']) ){ echo $_SESSION['mail']; } ?>">
         </p>
         <div class='btn-container'>
-          <a href="member_regist_confirm.php">
+          <a>
             <input class="btn" type="submit" value="確認画面へ">
           </a>
         </div>
