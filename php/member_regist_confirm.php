@@ -15,7 +15,6 @@
   $last_address = $_SESSION['last_address'];
   $mail = $_SESSION['mail'];
 
-  var_dump($family_name);
   
   // header("Location: member_regist_confirm.php");
 ?>
