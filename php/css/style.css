@@ -82,3 +82,8 @@
   margin: 20px 0;
   text-align: center;
 }
+.err_msg {
+  color: red;
+  font-size: 11px;
+  margin-left: 72px;
+}

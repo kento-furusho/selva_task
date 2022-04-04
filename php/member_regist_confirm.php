@@ -1,13 +1,13 @@
 <?php
-  session_start();
-  $family_name = $_SESSION['family_name'];
-  $given_name = $_SESSION['given_name'];
-  $gender = $_SESSION['gender'];
-  $pref_name = $_SESSION['pref_name'];
-  $last_address = $_SESSION['last_address'];
-  $password = $_SESSION['password'];
-  $re_password = $_SESSION['re_password'];
-  $mail = $_SESSION['mail'];
+session_start();
+  // $family_name = $_SESSION['family_name'];
+  // $given_name = $_SESSION['given_name'];
+  // $gender = $_SESSION['gender'];
+  // $pref_name = $_SESSION['pref_name'];
+  // $last_address = $_SESSION['last_address'];
+  // $password = $_SESSION['password'];
+  // $re_password = $_SESSION['re_password'];
+  // $mail = $_SESSION['mail'];
   
 ?>
 <!DOCTYPE html>
@@ -24,22 +24,22 @@
     <div class='content'>
       <h2>会員情報確認画面</h2>
         <p>氏名
-          <?php echo $family_name?>
-          <?php echo $given_name?>
+          <?php echo $_SESSION['family_name']?>
+          <?php echo $_SESSION['given_name']?>
         </p>
         <p>性別
-          <?php echo $gender?>
+          <?php echo $_SESSION['gender']?>
         </p>
         <p>住所
-          <?php echo $pref_name?>
-          <?php echo $last_address?>
+          <?php echo $_SESSION['pref_name']?>
+          <?php echo $_SESSION['last_address']?>
         </p>
         <p>パスワード
           <?php echo 'セキュリティのため非表示'?>
         </p>
         <p>メールアドレス
           <span style='color: #6495ed;'>
-            <?php echo $mail?>
+            <?php echo $_SESSION['mail']?>
           </span>
         </p>
       </div>
