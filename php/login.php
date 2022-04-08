@@ -48,9 +48,11 @@ if (isset($_POST['login'])) {
               $id = $result['id'];
               $prepare = $pdo->query("SELECT * FROM members WHERE id = $id");
               foreach ($prepare as $result) {
+                $result['id'];
                 $result['name_sei'];
                 $result['name_mei'];
               }
+              $_SESSION['id'] = $result['id'];
               $_SESSION['name_sei'] = $result['name_sei'];
               $_SESSION['name_mei'] = $result['name_mei'];
               $_SESSION['loggedin'] = true;

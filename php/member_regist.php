@@ -55,7 +55,6 @@ $prefectures = array(
 
   session_start();
   if(!empty($_POST)){
-
     $_SESSION['name_sei'] = $_POST['name_sei'];
     $_SESSION['name_mei'] = $_POST['name_mei'];
     $_SESSION['gender'] = $_POST['gender'];

@@ -130,3 +130,10 @@ header {
 .right-side-btn {
   margin: 0px 20px 0px 10px;
 }
+.title {
+  width: 288px;
+}
+.comment {
+  width: 353px;
+  vertical-align: top;
+}
