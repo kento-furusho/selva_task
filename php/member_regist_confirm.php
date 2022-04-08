@@ -1,4 +1,5 @@
 <?php
+require_once('function.php');
 date_default_timezone_set('Asia/Tokyo');
 session_start();
   if(!empty($_POST)) {
@@ -10,9 +11,13 @@ session_start();
     $current_data = date("Y-m-d H:i:s");
     // 接続
     try {
-      $pdo = new PDO('mysql:charset=UTF8;dbname=selva_task;host=localhost', 'root', 'pass7610');
-    } catch(PDOException $e) {
-      $db_err_msg[] = $e->getMessage();
+      $option = array(
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
+     );
+        $pdo = new PDO('mysql:charset=utf8mb4;dbname=selva_task;host=localhost', 'root', 'pass7610', $option);
+      } catch(PDOException $e) {
+        $db_err_msg[] = $e->getMessage();
     }
     // sql作成
     $stmt = $pdo->prepare(
@@ -38,7 +43,7 @@ session_start();
       if($res) {
         header("Location:member_regist_completed.php");
       } else {
-        $db_err_msg[] = '登録に失敗しました。';
+        $db_err_msg[] = 'メールアドレスが既に存在しています。';
       }
   }
   // データベースの接続を閉じる
@@ -74,8 +79,8 @@ session_start();
           <input type="hidden" name="password" value="<?php echo $_SESSION['password']?>">
           <input type="hidden" name="email" value="<?php echo $_SESSION['email']?>">
           <p>氏名
-            <?php echo $_SESSION['name_sei']?>
-            <?php echo $_SESSION['name_mei']?>
+            <?php echo h($_SESSION['name_sei'])?>
+            <?php echo h($_SESSION['name_mei'])?>
           </p>
           <p>性別
             <?php
@@ -87,15 +92,15 @@ session_start();
             ?>
           </p>
           <p>住所
-            <?php echo $_SESSION['pref_name']?>
-            <?php echo $_SESSION['address']?>
+            <?php echo h($_SESSION['pref_name'])?>
+            <?php echo h($_SESSION['address'])?>
           </p>
           <p>パスワード
             <?php echo 'セキュリティのため非表示'?>
           </p>
           <p>メールアドレス
             <span style='color: #6495ed;'>
-              <?php echo $_SESSION['email']?>
+              <?php echo h($_SESSION['email'])?>
             </span>
           </p>
         </div>

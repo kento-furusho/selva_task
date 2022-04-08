@@ -1,5 +1,6 @@
 <?php
-
+// 開発者モード
+ini_set('display_errors', 'on');
 require_once('validate.php');
 
 $prefectures = array(
@@ -69,18 +70,23 @@ $prefectures = array(
 
     if (empty($err_messages)) {
       header("Location:member_regist_confirm.php");
+      exit;
     }
   }
 
     // エラー後、入力保持用
-    $name_sei = $_SESSION['name_sei'];
-    $name_mei = $_SESSION['name_mei'];
-    $gender = $_SESSION['gender'];
-    $pref_name = $_SESSION['pref_name'];
-    $address = $_SESSION['address'];
-    $password = $_SESSION['password'];
-    $re_password = $_SESSION['re_password'];
-    $email = $_SESSION['email'];
+    if(!empty($_SESSION)) {
+      $name_sei = $_SESSION['name_sei'];
+      $name_mei = $_SESSION['name_mei'];
+      $gender = $_SESSION['gender'];
+      $pref_name = $_SESSION['pref_name'];
+      $address = $_SESSION['address'];
+      $password = $_SESSION['password'];
+      $re_password = $_SESSION['re_password'];
+      $email = $_SESSION['email'];
+    }
+
+    $_SESSION = array();
 ?>
 
 
@@ -95,7 +101,6 @@ $prefectures = array(
 </head>
 <body>
   <div class="container">
-    <?php echo $err_mes ?>
     <form class='forms' method="post" action="member_regist.php">
         <h2>会員情報登録フォーム</h2>
         <div class="err_msg">
@@ -143,12 +148,17 @@ $prefectures = array(
         </p>
         <p>
           <label for="email">メールアドレス</label>
-          <input style="margin-left: 5px;" class='form_last_3' type="text" name='email' id='email' value="<?php if($email 
+          <input style="margin-left: 5px;" class='form_last_3' type="text" name='email' id='email' value="<?php if(!empty($email)
           ){ echo $email; } ?>">
         </p>
         <div class='btn-container'>
           <a>
             <input class="btn" type="submit" value="確認画面へ">
+          </a>
+        </div>
+        <div class='btn-container'>
+          <a href="index.php">
+            <input class="back_btn" type="button" value="トップに戻る">
           </a>
         </div>
       </form>

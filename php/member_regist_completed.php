@@ -18,6 +18,11 @@
       <h2>会員登録完了</h2>
       <p>会員登録が完了しました。</p>
     </div>
+    <div class='btn-container' style="margin-top: 195px;">
+      <a href="index.php">
+        <input class="btn" type="button" value="トップに戻る">
+      </a>
+    </div>
   </div>
 </body>
 </html>
