@@ -17,12 +17,9 @@ date_default_timezone_set('Asia/Tokyo');
         PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
      );
         $pdo = new PDO('mysql:charset=utf8mb4;dbname=selva_task;host=localhost', 'root', 'pass7610', $option);
-      } catch(PDOException $e) {
-        $thread_err_msg[] = $e->getMessage();
-    }
-    // sql作成
-    $stmt = $pdo->prepare(
-      "INSERT INTO threads (member_id, title, content, created_at, updated_at)
+        // sql作成
+        $stmt = $pdo->prepare(
+          "INSERT INTO threads (member_id, title, content, created_at, updated_at)
       VALUES (:member_id, :title, :content, :created_at, :updated_at)"
       );
       // 値のセット
@@ -38,9 +35,11 @@ date_default_timezone_set('Asia/Tokyo');
       $stmt = null;
       // データベースの接続を閉じる
       $pdo = null;
+    } catch(PDOException $e) {
+      $thread_err_msg[] = $e->getMessage();
+    }
       if($res) {
-        
-        header("Location:index.php");
+        header("Location:thread.php");
       } else {
         $thread_err_msg[] = 'スレッドを投稿できませんでした';
       }

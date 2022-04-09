@@ -16,38 +16,38 @@ session_start();
         PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
      );
         $pdo = new PDO('mysql:charset=utf8mb4;dbname=selva_task;host=localhost', 'root', 'pass7610', $option);
-      } catch(PDOException $e) {
-        $db_err_msg[] = $e->getMessage();
-    }
-    // sql作成
-    $stmt = $pdo->prepare(
-      "INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email, created_at, updated_at)
-      VALUES (:name_sei, :name_mei, :gender, :pref_name, :address, :password, :email, :created_at, :updated_at)"
+        // sql作成
+        $stmt = $pdo->prepare(
+          "INSERT INTO members (name_sei, name_mei, gender, pref_name, address, password, email, created_at, updated_at)
+        VALUES (:name_sei, :name_mei, :gender, :pref_name, :address, :password, :email, :created_at, :updated_at)"
       );
-      // 値のセット
-      $stmt->bindParam( ':name_sei', $_POST['name_sei'], PDO::PARAM_STR);
-      $stmt->bindParam( ':name_mei', $_POST['name_mei'], PDO::PARAM_STR);
-      $stmt->bindValue( ':gender', $_POST['gender'], PDO::PARAM_INT);
-      $stmt->bindParam( ':pref_name', $_POST['pref_name'], PDO::PARAM_STR);
-      $stmt->bindParam( ':address', $_POST['address'], PDO::PARAM_STR);
-      $stmt->bindParam( ':password', $_POST['password'], PDO::PARAM_STR);
-      $stmt->bindParam( ':email', $_POST['email'], PDO::PARAM_STR);
-      $stmt->bindParam( ':created_at', $current_data, PDO::PARAM_STR);
-      $stmt->bindParam( ':updated_at', $current_data, PDO::PARAM_STR);
-      // 実行
-      $res = $stmt->execute();
+        // 値のセット
+        $stmt->bindParam( ':name_sei', $_POST['name_sei'], PDO::PARAM_STR);
+        $stmt->bindParam( ':name_mei', $_POST['name_mei'], PDO::PARAM_STR);
+        $stmt->bindValue( ':gender', $_POST['gender'], PDO::PARAM_INT);
+        $stmt->bindParam( ':pref_name', $_POST['pref_name'], PDO::PARAM_STR);
+        $stmt->bindParam( ':address', $_POST['address'], PDO::PARAM_STR);
+        $stmt->bindParam( ':password', $_POST['password'], PDO::PARAM_STR);
+        $stmt->bindParam( ':email', $_POST['email'], PDO::PARAM_STR);
+        $stmt->bindParam( ':created_at', $current_data, PDO::PARAM_STR);
+        $stmt->bindParam( ':updated_at', $current_data, PDO::PARAM_STR);
+        // 実行
+        $res = $stmt->execute();
 
-      // プリペアドステートメントを削除
-      $stmt = null;
-      $pdo = null;
+        // プリペアドステートメントを削除
+        $stmt = null;
+        $pdo = null;
+    } catch(PDOException $e) {
+        $db_err_msg[] = $e->getMessage();
+      }
       if($res) {
         header("Location:member_regist_completed.php");
       } else {
         $db_err_msg[] = 'メールアドレスが既に存在しています。';
       }
-  }
-  // データベースの接続を閉じる
-?>
+    }
+    // データベースの接続を閉じる
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

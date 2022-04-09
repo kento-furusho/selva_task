@@ -64,7 +64,7 @@
   color: #6495ed;
   font-size: 15px;
   font-weight: bold;
-  border:#6495ed 1px;
+  border:#6495ed 1px solid;
 }
 
 /* 会員登録完了画面 */
@@ -128,7 +128,7 @@ header {
   font-weight: bold;
 }
 .right-side-btn {
-  margin: 0px 20px 0px 10px;
+  margin-right: 20px;
 }
 .title {
   width: 288px;
@@ -136,4 +136,17 @@ header {
 .comment {
   width: 353px;
   vertical-align: top;
+}
+.search_form {
+  text-align: center;
+  margin: 10px 0px;
+}
+.search_input {
+  width: 250px;
+}
+.search_btn {
+  width: 100px;
+}
+.search_results {
+  margin: 0 auto;
 }
