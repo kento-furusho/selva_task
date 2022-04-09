@@ -21,6 +21,7 @@
         </p>
       </div>
       <div class="header-right">
+        <a class="header-btn" href="thread_regist.php">新規スレッド作成</a>
         <a class="header-btn right-side-btn" href="logout.php">ログアウト</a>
       </div>
     <?php endif ?>

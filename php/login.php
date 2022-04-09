@@ -52,7 +52,7 @@ if (isset($_POST['login'])) {
                 $result['name_sei'];
                 $result['name_mei'];
               }
-              $_SESSION['id'] = $result['id'];
+              $_SESSION['member_id'] = $result['id'];
               $_SESSION['name_sei'] = $result['name_sei'];
               $_SESSION['name_mei'] = $result['name_mei'];
               $_SESSION['loggedin'] = true;
@@ -70,7 +70,7 @@ if (isset($_POST['login'])) {
   }
 }
 // エラー後、入力保持用
-if(!empty($_SESSION)) {
+if(!empty($_SESSION['email'])) {
   $email = $_SESSION['email'];
 }
 

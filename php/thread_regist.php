@@ -2,9 +2,13 @@
 // 開発者モード
 ini_set('display_errors', 'on');
 // require_once('validate.php');
+session_start();
+// ログアウト時、toppageにロールバック
+if(empty($_SESSION['loggedin'])) {
+  header("Location:index.php");
+  exit();
+}
 
-
-  session_start();
   if(!empty($_POST)){
     // 一旦入れる
     $_SESSION['title'] = $_POST['title'];
@@ -38,12 +42,13 @@ ini_set('display_errors', 'on');
   }
 
     // エラー後、入力保持用
-    if(!empty($_SESSION)) {
+    if(!empty($_SESSION['title']) || !empty($_SESSION['comment'])) {
       $title = $_SESSION['title'];
       $comment = $_SESSION['comment'];
     }
     // セッション空にする
-    $_SESSION = array();
+    unset($_SESSION['title']);
+    unset($_SESSION['comment'])
 ?>
 
 
