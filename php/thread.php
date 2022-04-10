@@ -26,9 +26,9 @@ if(empty($_POST['key'])) {
     }
     // 接続解除
     $pdo = null;
-    } catch(PDOException $e) {
+  } catch(PDOException $e) {
       $thread_err_msg[] = $e->getMessage();
-    }
+  }
 }
 //////// 検索 ////////
 if(!empty($_POST['key'])) {
@@ -83,10 +83,12 @@ if(!empty($_POST['key'])) {
     <div>
       <table class="search_results">
         <?php foreach($rows as $row) :?>
-          <tr height=35px>
+          <tr class="search_result" height=35px>
               <td width=50px>ID:<?php h($row['id'])?></td>
-              <td width=200px><?php h($row['title'])?></td>
-              <td><?php h($row['created_at'])?></td>
+              <td width=200px>
+                <a style="text-decoration:none;"href="thread_detail.php?id=<?php echo $row['id']?>"><?php h($row['title'])?></a>
+              </td>
+              <td><?php echo date('Y.m.d H:i', strtotime($row['created_at']))?></td>
           </tr>
          <?php endforeach?>
         </table>
