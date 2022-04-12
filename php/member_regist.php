@@ -2,6 +2,7 @@
 // 開発者モード
 ini_set('display_errors', 'on');
 require_once('validate.php');
+require_once('function.php');
 
 $prefectures = array(
   1 => '北海道',
@@ -113,9 +114,9 @@ $prefectures = array(
         </div>
         <p>氏名
           <label for="name_sei">姓</label>
-          <input class='input_name' type="text" name='name_sei' id='name_sei' value="<?php if(!empty($name_sei) ){ echo $name_sei; } ?>">
+          <input class='input_name' type="text" name='name_sei' id='name_sei' value="<?php if(!empty($name_sei) ){ echo h($name_sei); } ?>">
           <label for="name_mei">名</label>
-          <input class='input_name' type="text" name='name_mei' id='name_mei' value="<?php if(!empty($name_mei) ){ echo $name_mei; } ?>">
+          <input class='input_name' type="text" name='name_mei' id='name_mei' value="<?php if(!empty($name_mei) ){ echo h($name_mei); } ?>">
         </p>
         <p>性別
           <input style="margin-left: 20px;" type="radio" name='gender' value='1'
@@ -135,7 +136,7 @@ $prefectures = array(
         </p>
         <p style="margin-left: 38px;">
           <label for="address" class="address_label">それ以降の住所</label>
-          <input style="width: 237px;" type="text" name='address' id='name_sei' value="<?php if(!empty($address) ){ echo $address; } ?>">
+          <input style="width: 237px;" type="text" name='address' id='name_sei' value="<?php if(!empty($address) ){ echo h($address); } ?>">
         </p>
         <p>
           <label for="password">パスワード</label>
@@ -148,7 +149,7 @@ $prefectures = array(
         <p>
           <label for="email">メールアドレス</label>
           <input style="margin-left: 5px;" class='form_last_3' type="text" name='email' id='email' value="<?php if(!empty($email)
-          ){ echo $email; } ?>">
+          ){ echo h($email); } ?>">
         </p>
         <div class='btn-container'>
           <a>

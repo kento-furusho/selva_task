@@ -41,7 +41,7 @@
         $err_msg[] = 'パスワードが一致しません';
       }
       // メールアドレス
-      if (mb_strlen($data['email']) > 201 ) {
+      if (mb_strlen($data['email']) > 200 ) {
         $err_msg[] = 'メールアドレスは200文字以内で入力してください';
       }
       if (empty($data['email'])) {

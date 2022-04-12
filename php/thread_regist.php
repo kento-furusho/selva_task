@@ -88,8 +88,8 @@ if(empty($_SESSION['loggedin'])) {
           </a>
         </div>
         <div class='btn-container'>
-          <a href="index.php">
-            <input class="back_btn" type="button" value="トップに戻る">
+          <a href="thread.php">
+            <input class="back_btn" type="button" value="一覧に戻る">
           </a>
         </div>
       </form>
