@@ -1,4 +1,5 @@
 <?php
+require_once('function.php');
 ini_set('display_errors', 'on');
 require_once('function.php');
 // スレッドのヘッダー読み込み
@@ -10,11 +11,7 @@ $thread_err_msg = array();
 if(empty($_POST['key'])) {
   try{
     // 接続
-    $option = array(
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-      PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
-    );
-    $pdo = new PDO('mysql:charset=utf8mb4;dbname=selva_task;host=localhost', 'root', 'pass7610', $option);
+    $pdo = db_connect();
     // sql作成
     $prepare = $pdo->prepare("SELECT id, title, created_at FROM threads ORDER BY created_at DESC");
     if($prepare->execute()) {
@@ -44,8 +41,8 @@ if(!empty($_POST['key'])) {
     if($prepare) {
       $key = $_POST['key'];
       $like_key = "%".$key."%";
-      $prepare->bindValue(':title', $like_key, PDO::PARAM_STR);
-      $prepare->bindValue(':content', $like_key, PDO::PARAM_STR);
+      $prepare->bindParam(':title', $like_key, PDO::PARAM_STR);
+      $prepare->bindParam(':content', $like_key, PDO::PARAM_STR);
 
       if($prepare->execute()) {
         while($row = $prepare->fetch()) {
@@ -86,7 +83,7 @@ if(!empty($_POST['key'])) {
           <tr class="search_result" height=35px>
               <td width=50px>ID:<?php h($row['id'])?></td>
               <td width=200px>
-                <a style="text-decoration:none;"href="thread_detail.php?id=<?php echo $row['id']?>"><?php h($row['title'])?></a>
+                <a style="text-decoration:none;"href="thread_detail.php?id=<?php echo $row['id']?>&page=1"><?php h($row['title'])?></a>
               </td>
               <td><?php echo date('Y.m.d H:i', strtotime($row['created_at']))?></td>
           </tr>
