@@ -51,9 +51,8 @@ $detail_err_msg = array();
         }
       }
       // 総コメント数取得
-      $prepare = $pdo->prepare("SELECT * FROM comments WHERE $id = thread_id ");
-      $prepare->execute();
-      $count = $prepare->rowCount();
+      $res = $pdo->query("SELECT * FROM comments WHERE $id = thread_id ");
+      $count = $res->rowCount();
       // 総ページ数
       $page_num = ceil($count / 5);
       ///// コメントごとの作成者情報獲得 /////
@@ -128,6 +127,7 @@ $detail_err_msg = array();
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
+  <link rel ="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <title>スレッド詳細</title>
 </head>
 <body style="background-color:#E2EDF6;">
@@ -176,14 +176,56 @@ $detail_err_msg = array();
           $comment_date = date('m/d/y H:i', strtotime($comment['created_at']));
           $comment_content = $comment['comment'];
         ?>
-          <div class="comments">
-            <p><?=$comment_id.'.'.' '.$comment_name.' '.$comment_date ?></p>
-            <p><?=$comment_content?></p>
+        <div class="comments">
+          <p><?=$comment_id.'.'.' '.$comment_name.' '.$comment_date ?></p>
+          <p><?=$comment_content?></p>
+          <!-- いいねボタン -->
+          <div class="like">
+            <form action="thread_like.php" method="POST">
+              <!-- いいねページへ遷移 -->
+              <input type="hidden" name="member_id" value="<?=$_SESSION['member_id']?>">
+              <input type="hidden" name="comment_id" value="<?=$comment_id?>">
+              <input type="hidden" name="thread_id" value="<?=$id?>">
+              <input type="hidden" name="page_num" value="<?=$page?>">
+              <!-- いいね済みなら赤色 -->
+              <button class="like_btn" type="submit" style='background:none; border:none;'>
+                <?php
+                try {
+                  if(!empty($_SESSION['loggedin'])) {
+                    $pdo = db_connect();
+                    $member_id = $_SESSION['member_id'];
+                    $query = $pdo->query("SELECT * FROM likes WHERE member_id = $member_id and comment_id = $comment_id");
+                    $res = $query->fetch(PDO::FETCH_ASSOC);
+                    if($res) {
+                      echo "<i style='color:red;'class='fa-solid fa-heart'></i>";
+                    } else {
+                      echo "<i class='fa-regular fa-heart'></i>";
+                    }
+                  } else {
+                    echo "<i class='fa-regular fa-heart'></i>";
+                  }
+                } catch(PDOException $e) {
+                  var_dump($e->getMessage());
+                }
+                ?>
+              </button>
+              <!-- いいねの数を集計 -->
+              <?php
+                try {
+                  $pdo = db_connect();
+                  $res = $pdo->query("SELECT * FROM likes WHERE $comment_id = comment_id ");
+                  $count_comment = $res->rowCount();
+                } catch(PDOException $e) {
+                  var_dump($e->getMessage());
+                }
+                ?>
+              <span><?=$count_comment?></span>
+            </form>
           </div>
+        </div>
       <?php endforeach?>
     <?php endforeach?>
   <?php endif ?>
-
   <!-- 灰色の部分読み込み -->
   <?php include('_thread_pagination.php')?>
 

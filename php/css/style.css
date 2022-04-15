@@ -238,3 +238,11 @@ header {
   border-bottom: 1px solid gray;
   padding: 15px 0px;
 }
+/* いいねボタンと数 */
+.like_btn:hover {
+  cursor: pointer;
+}
+.like {
+  width: 87%;
+  text-align: right;
+}

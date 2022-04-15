@@ -10,7 +10,7 @@
     ＜前へ</a>
   <!-- 次へボタン -->
     <a
-      <?php if($_GET['page'] == ((string)$page_num)):?>
+      <?php if($_GET['page'] == ((string)$page_num) || $count <= 5) :?>
         class='next_page_gray_btn page_btn'
       <?php else: ?>
         class='next_page_btn page_btn'
