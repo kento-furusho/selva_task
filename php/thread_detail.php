@@ -207,6 +207,7 @@ $detail_err_msg = array();
                 } catch(PDOException $e) {
                   var_dump($e->getMessage());
                 }
+                  $pdo = null;
                 ?>
               </button>
               <!-- いいねの数を集計 -->
@@ -218,6 +219,7 @@ $detail_err_msg = array();
                 } catch(PDOException $e) {
                   var_dump($e->getMessage());
                 }
+                  $pdo = null;
                 ?>
               <span><?=$count_comment?></span>
             </form>

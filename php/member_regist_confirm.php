@@ -8,7 +8,7 @@ session_start();
     $stmt = null;
     $res = null;
     // 日時取得
-    $current_data = date("Y-m-d H:i:s");
+    $current_date = date("Y-m-d H:i:s");
     // 接続
     try {
       $option = array(
@@ -29,8 +29,8 @@ session_start();
         $stmt->bindParam( ':address', $_POST['address'], PDO::PARAM_STR);
         $stmt->bindParam( ':password', $_POST['password'], PDO::PARAM_STR);
         $stmt->bindParam( ':email', $_POST['email'], PDO::PARAM_STR);
-        $stmt->bindParam( ':created_at', $current_data, PDO::PARAM_STR);
-        $stmt->bindParam( ':updated_at', $current_data, PDO::PARAM_STR);
+        $stmt->bindParam( ':created_at', $current_date, PDO::PARAM_STR);
+        $stmt->bindParam( ':updated_at', $current_date, PDO::PARAM_STR);
         // 実行
         $res = $stmt->execute();
 

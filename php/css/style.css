@@ -246,3 +246,14 @@ header {
   width: 87%;
   text-align: right;
 }
+/* フッター */
+footer {
+  height: 60px;
+  width: 100%;
+  background-color: #fedcbd;
+  position: absolute;
+  bottom: 0;
+}
+.signout:hover {
+  cursor: pointer;
+}

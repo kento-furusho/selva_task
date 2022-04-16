@@ -41,7 +41,8 @@ if (isset($_POST['login'])) {
         // $row = $prepare->fetch(PDO::FETCH_ASSOC);
 
         if ($result = $prepare->fetch(PDO::FETCH_ASSOC)) {
-          if($password === $result['password']) {
+          // password合致かつ、削除されてない
+          if($password === $result['password'] && empty($result['deleted_at'])) {
               // セキュリティ向上のためのsession更新
               session_regenerate_id(true);
 
@@ -52,6 +53,7 @@ if (isset($_POST['login'])) {
                 $result['name_sei'];
                 $result['name_mei'];
               }
+              // トップページ用の情報を格納
               $_SESSION['member_id'] = $result['id'];
               $_SESSION['name_sei'] = $result['name_sei'];
               $_SESSION['name_mei'] = $result['name_mei'];

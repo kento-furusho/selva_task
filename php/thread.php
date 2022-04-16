@@ -2,8 +2,8 @@
 require_once('function.php');
 ini_set('display_errors', 'on');
 require_once('function.php');
-// スレッドのヘッダー読み込み
 session_start();
+// スレッドのヘッダー読み込み
 include('_header_thread.php');
 $thread_err_msg = array();
 
