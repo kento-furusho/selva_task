@@ -257,3 +257,26 @@ footer {
 .signout:hover {
   cursor: pointer;
 }
+/* 管理者ページ */
+.admin_header {
+  height: 60px;
+  width: 100%;
+  background-color: #CCCCCC;
+}
+.admin_form_email {
+  width: 267px;
+  margin-left: 5px;
+}
+.admin_form_pass {
+  width: 267px;
+  margin-left: 5px;
+}
+.admin-forms {
+  text-align: center;
+}
+.admin-forms h2 {
+  margin-top: 25px;
+}
+.admin-forms p{
+  margin: 30px 0;
+}

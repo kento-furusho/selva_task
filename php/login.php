@@ -1,7 +1,6 @@
 <?php
 // 開発者モード
 ini_set('display_errors', 'on');
-// セッション
 // ログイン済みなら遷移する(トップペーじ作ってから実装)
 if (!empty($_SESSION['loggedin'])) {
   header("Location:index.php");
