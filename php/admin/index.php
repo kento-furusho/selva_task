@@ -2,6 +2,10 @@
 // 開発者モード
 ini_set('display_errors', 'on');
 session_start();
+if(empty($_SESSION['admin_loggedin'])) {
+  header('location:login.php');
+  exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -30,5 +34,10 @@ session_start();
       </div>
     <?php endif ?>
   </header>
+  <main>
+      <div style="margin-top:60px; text-align:center;">
+        <a class="back_btn members_btn" href="members.php">会員一覧</a>
+      </div>
+  </main>
 </body>
 </html>

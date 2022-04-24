@@ -3,6 +3,12 @@
   require_once('function.php');
   ini_set('display_errors', 'on');
   date_default_timezone_set('Asia/Tokyo');
+  // ログインしてなかったら遷移
+  if(empty($_SESSION['loggedin'])) {
+    header('location:index.php');
+    exit;
+  }
+  // postされたら退会処理
   if(!empty($_POST['member_id'])) {
     $member_id = $_POST['member_id'];
     $current_date = date("Y-m-d H:i:s");

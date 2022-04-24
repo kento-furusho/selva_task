@@ -31,11 +31,7 @@ if(empty($_POST['key'])) {
 if(!empty($_POST['key'])) {
   try {
     // 接続
-    $option = array(
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::MYSQL_ATTR_MULTI_STATEMENTS => false
-    );
-    $pdo = new PDO('mysql:charset=utf8mb4;dbname=selva_task;host=localhost', 'root', 'pass7610', $option);
+    $pdo = db_connect();
     // sql作成
     $prepare = $pdo->prepare("SELECT id, title, content, created_at FROM threads WHERE title LIKE (:title) OR content LIKE (:content) ORDER BY created_at DESC");
     if($prepare) {
@@ -60,36 +56,36 @@ if(!empty($_POST['key'])) {
 }
 ?>
 <!-- ヘッダー読み込み -->
-  <div class="threads">
-    <!-- 一応エラー表示 -->
-    <div class="err_msg">
-      <?php
-        if(!empty($thread_err_msg)) {
-          foreach ($thread_err_msg as $err_msg) {
-            echo '※'.$err_msg.'<br/>';
-          }
+<div class="threads">
+  <!-- 一応エラー表示 -->
+  <div class="err_msg">
+    <?php
+      if(!empty($thread_err_msg)) {
+        foreach ($thread_err_msg as $err_msg) {
+          echo '※'.$err_msg.'<br/>';
         }
-      ?>
+      }
+    ?>
+  </div>
+  <!-- 検索欄 -->
+  <form class="search_form" action="thread.php" method="post">
+    <input class="search_input" type="text" name="key">
+    <a><input class="search_btn" type="submit" value="スレッド検索"></a>
+  </form>
+  <!-- 検索結果表示 -->
+  <div>
+    <table class="search_results">
+      <?php foreach($rows as $row) :?>
+        <tr class="search_result" height=35px>
+            <td width=50px>ID:<?php h($row['id'])?></td>
+            <td width=200px>
+              <a style="text-decoration:none;"href="thread_detail.php?id=<?php echo $row['id']?>&page=1"><?php h($row['title'])?></a>
+            </td>
+            <td><?php echo date('Y.m.d H:i', strtotime($row['created_at']))?></td>
+        </tr>
+        <?php endforeach?>
+      </table>
     </div>
-    <!-- 検索欄 -->
-    <form class="search_form" action="thread.php" method="post">
-      <input class="search_input" type="text" name="key">
-      <a><input class="search_btn" type="submit" value="スレッド検索"></a>
-    </form>
-    <!-- 検索結果表示 -->
-    <div>
-      <table class="search_results">
-        <?php foreach($rows as $row) :?>
-          <tr class="search_result" height=35px>
-              <td width=50px>ID:<?php h($row['id'])?></td>
-              <td width=200px>
-                <a style="text-decoration:none;"href="thread_detail.php?id=<?php echo $row['id']?>&page=1"><?php h($row['title'])?></a>
-              </td>
-              <td><?php echo date('Y.m.d H:i', strtotime($row['created_at']))?></td>
-          </tr>
-         <?php endforeach?>
-        </table>
-      </div>
   </div>
   <div class='btn-container'>
     <a href="index.php">
