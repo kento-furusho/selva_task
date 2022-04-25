@@ -138,9 +138,9 @@ empty($_SESSION['free_word'])
                 OR email like (:email))";
     }
     // 昇降、１０件
-    if(isset($_POST['asc'])) {
+    if(isset($_POST['asc']) || isset($_GET['asc'])) {
       $sql .= " ORDER BY id asc LIMIT $start, 10";
-    } elseif (isset($_POST['desc']) || empty($_POST['asc'])) {
+    } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
       $sql .= " ORDER BY id desc LIMIT $start, 10";
     }
     // prepare
@@ -341,7 +341,14 @@ empty($_SESSION['free_word'])
       <!------ 前へボタン ------>
       <div class="pagination_btns">
         <?php if($current_page > 1):?>
-          <a class="page_btn back_page" href="members.php?page=<?=$current_page - 1?>&transition=true">＜前へ </a>
+          <?php
+            $back_page = $current_page - 1;
+            if(isset($_POST['asc']) || isset($_GET['asc'])) {
+              echo "<a class='page_btn next_page' href='members.php?page=$back_page&transition=true&asc=true'>＜前へ</a>";
+            } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+              echo "<a class='page_btn' href='members.php?page=$back_page&transition=true&desc=true'>＜前へ</a>";
+            }
+          ?>
         <?php endif ?>
             <!------ ページネーションボタン ------>
         <!-- page_numが3以上の時 -->
@@ -405,7 +412,14 @@ empty($_SESSION['free_word'])
         <?php endif ?>
         <!------ 次へボタン ------>
         <?php if($current_page < $page_num):?>
-          <a class="page_btn next_page" href="members.php?page=<?=$current_page + 1?>&transition=true">次へ＞</a>
+            <?php
+              $next_page = $current_page + 1;
+              if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                echo "<a class='page_btn next_page' href='members.php?page=$next_page&transition=true&asc=true'>次へ＞</a>";
+              } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                echo "<a class='page_btn' href='members.php?page=$next_page&transition=true&desc=true'>次へ＞</a>";
+              }
+            ?>
         <?php endif ?>
       </div>
     </div>
