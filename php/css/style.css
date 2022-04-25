@@ -365,3 +365,11 @@ footer {
 .back_page {
   margin-right: 5px;
 }
+/* 詳細画面 */
+.detail_content{
+  margin: 0 auto;
+  width: 350px;
+}
+.detail_content p {
+  margin: 25px 0;
+}

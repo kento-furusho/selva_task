@@ -91,9 +91,9 @@ empty($_SESSION['free_word'])
     $pdo = db_connect();
     // 昇順降順
     if(isset($_POST['asc']) || isset($_GET['asc'])) {
-      $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at FROM members ORDER BY id asc LIMIT $start, 10");
+      $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at, deleted_at FROM members WHERE deleted_at IS NULL ORDER BY id asc LIMIT $start, 10");
     } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
-      $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at FROM members ORDER BY id desc LIMIT $start, 10");
+      $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at, deleted_at FROM members WHERE deleted_at IS NULL ORDER BY id desc LIMIT $start, 10");
     }
     if($prepare->execute()) {
       while($member = $prepare->fetch()) {
@@ -148,9 +148,9 @@ empty($_SESSION['free_word'])
     }
     // 昇降、１０件
     if(isset($_POST['asc']) || isset($_GET['asc'])) {
-      $sql .= " ORDER BY id asc LIMIT $start, 10";
+      $sql .= " AND deleted_at IS NULL ORDER BY id asc LIMIT $start, 10";
     } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
-      $sql .= " ORDER BY id desc LIMIT $start, 10";
+      $sql .= " AND deleted_at IS NULL ORDER BY id desc LIMIT $start, 10";
     }
     // prepare
     $prepare = $pdo->prepare($sql);
@@ -232,11 +232,7 @@ empty($_SESSION['free_word'])
   <main>
     <!-- 会員登録ボタン -->
     <div class="btn_container" style="text-align: center; margin:25px;">
-<<<<<<< HEAD
-      <a class="btn" style="text-decoration:none; padding: 12px 40px;" href="member_regist.php">
-=======
       <a class="btn" style="text-decoration:none; padding: 12px 40px;" href="member_edit.php">
->>>>>>> 20220425/php_step11
         会員登録
       </a>
     </div>
@@ -321,7 +317,8 @@ empty($_SESSION['free_word'])
                 <?php endif ?>
               </form>
             </th>
-            <th>編集</th>
+            <th class="member_th">編集</th>
+            <th>詳細</th>
           </tr>
         </thead>
         <?php if(!empty($members)):?>
@@ -329,7 +326,7 @@ empty($_SESSION['free_word'])
             <tbody>
               <tr class="member_tds">
                 <td class="member_td"><?= $member['id']?></td>
-                <td class="member_td"><?= $member['name_sei'].' '.$member['name_mei'] ?></td>
+                <td class="member_td"><a style="text-decoration:none;" href=<?php echo 'member_detail.php?id='.$member['id'] ?>><?= $member['name_sei'].' '.$member['name_mei'] ?></a></td>
                 <td class="member_td">
                   <?php
                   if($member['gender'] == 1) {
@@ -341,11 +338,12 @@ empty($_SESSION['free_word'])
                 </td>
                 <td class="member_td"><?= $member['pref_name'].$member['address']?></td>
                 <td class="member_td"><?= date('Y/m/d', strtotime($member['created_at']))?></td>
-                <td>
+                <td class="member_td">
                   <a href="member_edit.php?id=<?=$member['id']?>" style="text-decoration:none;">
                     編集
                   </a>
                 </td>
+                <td><a style="text-decoration:none;" href=<?php echo 'member_detail.php?id='.$member['id'] ?>>詳細</a></td>
               </tr>
             </tbody>
           <?php endforeach?>
