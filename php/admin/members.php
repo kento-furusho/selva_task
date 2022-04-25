@@ -1,5 +1,4 @@
 <?php
-// 開発者モード
 ini_set('display_errors', 'on');
 require_once('../function.php');
 session_start();
@@ -7,6 +6,16 @@ if(empty($_SESSION['admin_loggedin'])) {
   header('location:login.php');
   exit;
 }
+// 一旦空
+$_SESSION['name_sei'] = '';
+$_SESSION['name_mei'] = '';
+$_SESSION['gender'] = '';
+$_SESSION['pref_name'] = '';
+$_SESSION['address'] = '';
+$_SESSION['password'] = '';
+$_SESSION['re_password'] = '';
+$_SESSION['email'] = '';
+
 $member_err_msg = array();
 ////////// メンバー全件取得 //////////
 // 現在のページ数
@@ -223,7 +232,7 @@ empty($_SESSION['free_word'])
   <main>
     <!-- 会員登録ボタン -->
     <div class="btn_container" style="text-align: center; margin:25px;">
-      <a class="btn" style="text-decoration:none; padding: 12px 40px;" href="member_regist.php">
+      <a class="btn" style="text-decoration:none; padding: 12px 40px;" href="member_edit.php">
         会員登録
       </a>
     </div>

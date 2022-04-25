@@ -1,61 +1,62 @@
 <?php
-// 開発者モード
-ini_set('display_errors', 'on');
 require_once('../validate.php');
 require_once('../function.php');
 session_start();
-$id = $_GET['id'];
-// 個々の情報取得
-if(empty($edit_err_msg)) {
-  try{
-    $pdo = db_connect();
-    $prepare = $pdo->prepare("SELECT * FROM members WHERE id = :id");
-    $prepare->bindValue(':id', $id, PDO::PARAM_INT);
-    if($prepare->execute()) {
-      $member = $prepare->fetch();
-    }
-    $pdo = null;
-  } catch(PDOException $e) {
-    $edit_err_msg[] = $e->getMessage();
-  };
-}
-
-if(!empty($_POST['submit'])){
-  $_SESSION['name_sei'] = $_POST['name_sei'];
-  $_SESSION['name_mei'] = $_POST['name_mei'];
-  $_SESSION['gender'] = $_POST['gender'];
-  $_SESSION['pref_name'] = $_POST['pref_name'];
-  $_SESSION['address'] = $_POST['address'];
-  $_SESSION['password'] = $_POST['password'];
-  $_SESSION['re_password'] = $_POST['re_password'];
-  $_SESSION['email'] = $_POST['email'];
-
-  // バリデーション
-  $edit_err_msg = edit_validation($_POST, $prefectures);
-
-  // 重複するemailバリデーション
-  if(!empty($_POST['email'])) {
-    try{
-      $new_email = $_POST['email'];
+// 会員編集
+if(isset($_GET['id'])) {
+    $id = $_GET['id'];
+    // 個々の情報取得
+    if(empty($edit_err_msg)) {
+      try{
       $pdo = db_connect();
-      $prepare = $pdo->prepare("SELECT email FROM members");
+      $prepare = $pdo->prepare("SELECT * FROM members WHERE id = :id");
+      $prepare->bindValue(':id', $id, PDO::PARAM_INT);
       if($prepare->execute()) {
-        while($email = $prepare->fetch()) {
-          $emails[] = $email;
-        }
-      }
-      if($new_email !== $member['email'] && in_array($new_email, $emails)) {
-        $edit_err_msg[] = "メールアドレスが既に存在しています";
+        $member = $prepare->fetch();
       }
       $pdo = null;
     } catch(PDOException $e) {
       $edit_err_msg[] = $e->getMessage();
-    }
+    };
   }
 
-  if (empty($edit_err_msg)) {
-    header("Location:member_regist_confirm.php");
-    exit;
+  if(!empty($_POST['submit'])){
+    $_SESSION['name_sei'] = $_POST['name_sei'];
+    $_SESSION['name_mei'] = $_POST['name_mei'];
+    $_SESSION['gender'] = $_POST['gender'];
+    $_SESSION['pref_name'] = $_POST['pref_name'];
+    $_SESSION['address'] = $_POST['address'];
+    $_SESSION['password'] = $_POST['password'];
+    $_SESSION['re_password'] = $_POST['re_password'];
+    $_SESSION['email'] = $_POST['email'];
+
+    // バリデーション
+    $edit_err_msg = edit_validation($_POST, $prefectures);
+
+    if (empty($edit_err_msg)) {
+      header("Location:member_edit_confirm.php?id=$id");
+      exit;
+    }
+  }
+} else {
+  // 会員登録
+  if(!empty($_POST['submit'])){
+    $_SESSION['name_sei'] = $_POST['name_sei'];
+    $_SESSION['name_mei'] = $_POST['name_mei'];
+    $_SESSION['gender'] = $_POST['gender'];
+    $_SESSION['pref_name'] = $_POST['pref_name'];
+    $_SESSION['address'] = $_POST['address'];
+    $_SESSION['password'] = $_POST['password'];
+    $_SESSION['re_password'] = $_POST['re_password'];
+    $_SESSION['email'] = $_POST['email'];
+
+    // バリデーション
+    $edit_err_msg = validation($_POST, $prefectures);
+
+    if (empty($edit_err_msg)) {
+      header("Location:member_edit_confirm.php");
+      exit;
+    }
   }
 }
 
@@ -88,9 +89,6 @@ if(!empty($_POST['submit'])){
   $_SESSION['re_password'] = '';
   $_SESSION['email'] = '';
 
-  // 確認用
-  var_dump($name_sei);
-  var_dump($name_mei);
 ?>
 
 
@@ -107,7 +105,13 @@ if(!empty($_POST['submit'])){
 <header class="admin_header">
     <div class="header-left">
       <h3 style="line-height:60px; margin-left:20px;">
-        会員編集
+        <?php
+          if(empty($member)) {
+            echo '会員登録';
+          } else {
+            echo '会員編集';
+          }
+        ?>
       </h3>
     </div>
     <div class="header-right">
@@ -115,8 +119,8 @@ if(!empty($_POST['submit'])){
     </div>
   </header>
   <div>
-    <form class='forms' method="post" action="member_edit.php?id=<?=$id?>">
-        <div class="err_msg">
+    <form class='forms' method="post" action="<?php if(empty($member)){echo 'member_edit.php';}else{echo 'member_edit.php?id='.$id;}?>">
+        <div class="err_msg" style="text-align:center; margin:15px auto;">
           <?php
             if(!empty($edit_err_msg)) {
               foreach ($edit_err_msg as $err_msg) {
@@ -126,19 +130,24 @@ if(!empty($_POST['submit'])){
           ?>
         </div>
         <p>ID
-          <?php if(!empty($id)){echo h($id);}else{echo $member['id'];}?>
+          <?php if(!empty($member)){
+              echo h($member['id']);
+            } else {
+              echo '登録後に自動採番';
+            }
+          ?>
         </p>
         <p>氏名
           <label for="name_sei">姓</label>
-          <input class='input_name' type="text" name='name_sei' id='name_sei' value="<?php if(!empty($name_sei)){ echo h($name_sei);}elseif(empty($edit_err_msg)){echo $member['name_sei'];} ?>">
+          <input class='input_name' type="text" name='name_sei' id='name_sei' value="<?php if(!empty($name_sei)){ echo h($name_sei);}elseif(empty($edit_err_msg) && !empty($member)){echo $member['name_sei'];} ?>">
           <label for="name_mei">名</label>
-          <input class='input_name' type="text" name='name_mei' id='name_mei' value="<?php if(!empty($name_mei)){ echo h($name_mei);}elseif(empty($edit_err_msg)){echo $member['name_mei'];} ?>">
+          <input class='input_name' type="text" name='name_mei' id='name_mei' value="<?php if(!empty($name_mei)){ echo h($name_mei);}elseif(empty($edit_err_msg) && !empty($member)){echo $member['name_mei'];} ?>">
         </p>
         <p>性別
           <input style="margin-left: 20px;" type="radio" name='gender' value='1'
-          <?php if(isset($gender) && $gender == '1'){echo 'checked';}elseif($member['gender']==1 && empty($edit_err_msg)){echo 'checked';} ?>>男性
+          <?php if(isset($gender) && $gender == '1'){echo 'checked';}elseif(!empty($member) && $member['gender']==1 && empty($edit_err_msg)){echo 'checked';} ?>>男性
           <input type="radio" name='gender' value='2'
-          <?php if(isset($gender) && $gender == '2'){echo 'checked';}elseif($member['gender']==2 && empty($edit_err_msg)){echo 'checked';} ?>>女性
+          <?php if(isset($gender) && $gender == '2'){echo 'checked';}elseif(!empty($member) && $member['gender']==2 && empty($edit_err_msg)){echo 'checked';} ?>>女性
         </p>
         <p>住所
           <label>都道府県</label>
@@ -146,31 +155,31 @@ if(!empty($_POST['submit'])){
             <option value="0">選択してください</option>
             <?php foreach($prefectures as $prefecture): ?>
                 <option value="<?php echo $prefecture ?>"
-                <?php if(!empty($pref_name) && $prefecture === $pref_name){echo 'selected';}elseif($member['pref_name'] === $prefecture && empty($edit_err_msg)){echo 'selected';} ?>>
+                <?php if(!empty($pref_name) && $prefecture === $pref_name){echo 'selected';}elseif(!empty($member) && $member['pref_name'] === $prefecture && empty($edit_err_msg)){echo 'selected';} ?>>
                 <?php echo $prefecture ?>
             <?php endforeach; ?>
           </select>
         </p>
         <p style="margin-left: 38px;">
           <label for="address" class="address_label">それ以降の住所</label>
-          <input style="width: 237px;" type="text" name='address' id='name_sei' value="<?php if(!empty($address)){echo h($address);}elseif(empty($edit_err_msg)){echo h($member['address']);} ?>">
+          <input style="width: 237px;" type="text" name='address' id='name_sei' value="<?php if(!empty($address)){echo h($address);}elseif(empty($edit_err_msg) && !empty($member)){echo h($member['address']);} ?>">
         </p>
         <p>
           <label for="password">パスワード</label>
-          <input style="margin-left: 37px;" class='form_last_3' type="password" name='password' id='password' value="<?php if(!empty($password)){echo h($password);}elseif(empty($edit_err_msg)){echo h($member['password']);} ?>">
+          <input style="margin-left: 37px;" class='form_last_3' type="password" name='password' id='password'>
         </p>
         <p>
           <label for="re_password">パスワード確認</label>
-          <input style="margin-left: 5px;" class='form_last_3' type="password" name='re_password' id='re_password' value="<?php if(!empty($re_password)){ echo h($re_password);}elseif(empty($edit_err_msg)){echo $member['password'];} ?>">
+          <input style="margin-left: 5px;" class='form_last_3' type="password" name='re_password' id='re_password' >
         </p>
         <p>
           <label for="email">メールアドレス</label>
           <input style="margin-left: 5px;" class='form_last_3' type="text" name='email' id='email' value="<?php if(!empty($email)
-          ){echo h($email);}elseif(empty($edit_err_msg)){echo $member['email'];} ?>">
+          ){echo h($email);}elseif(empty($edit_err_msg) && !empty($member)){echo $member['email'];} ?>">
         </p>
         <div class='btn-container'>
           <a>
-            <input class="btn" name="submit" type="submit" value="確認画面へ">
+            <input class="back_btn" name="submit" type="submit" value="確認画面へ">
           </a>
         </div>
       </form>
