@@ -81,9 +81,9 @@ empty($_SESSION['free_word'])
     // 接続
     $pdo = db_connect();
     // 昇順降順
-    if(isset($_POST['asc'])) {
+    if(isset($_POST['asc']) || isset($_GET['asc'])) {
       $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at FROM members ORDER BY id asc LIMIT $start, 10");
-    } elseif (isset($_POST['desc']) || empty($_POST['asc'])) {
+    } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
       $prepare = $pdo->prepare("SELECT id, name_sei, name_mei, gender, pref_name, address, created_at FROM members ORDER BY id desc LIMIT $start, 10");
     }
     if($prepare->execute()) {
@@ -138,9 +138,9 @@ empty($_SESSION['free_word'])
                 OR email like (:email))";
     }
     // 昇降、１０件
-    if(isset($_POST['asc'])) {
+    if(isset($_POST['asc']) || isset($_GET['asc'])) {
       $sql .= " ORDER BY id asc LIMIT $start, 10";
-    } elseif (isset($_POST['desc']) || empty($_POST['asc'])) {
+    } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
       $sql .= " ORDER BY id desc LIMIT $start, 10";
     }
     // prepare
@@ -221,6 +221,12 @@ empty($_SESSION['free_word'])
     </div>
   </header>
   <main>
+    <!-- 会員登録ボタン -->
+    <div class="btn_container" style="text-align: center; margin:25px;">
+      <a class="btn" style="text-decoration:none; padding: 12px 40px;" href="member_regist.php">
+        会員登録
+      </a>
+    </div>
     <!------- 検索欄 ------->
     <form action="members.php" method="post">
       <table class="search_table">
@@ -277,31 +283,32 @@ empty($_SESSION['free_word'])
               ID
               <!------ 昇順降順ボタン ------>
               <form style="display:inline-block;" action="members.php?page=<?=$current_page?>" method="POST">
-                <?php if(isset($_POST['asc'])):?>
+                <?php if(isset($_POST['asc']) || isset($_GET['asc'])):?>
                   <input type="hidden" name="desc">
-                    <button class="arrow" type="submit" value="▼">▼</button>
-                <?php elseif(isset($_POST['desc']) || empty($_POST['desc'])):?>
+                  <button class="arrow" type="submit" value="desc">▼</button>
+                <?php elseif(isset($_POST['desc'])|| empty($_POST['desc'])):?>
                   <input type="hidden" name="asc">
-                    <button class="arrow" type="submit" value="▼">▼</button>
+                  <button class="arrow" type="submit" value="asc">▼</button>
                 <?php endif ?>
               </form>
             </th>
             <th class="member_th">氏名</th>
             <th class="member_th">性別</th>
             <th class="member_th">住所</th>
-            <th>
+            <th class="member_th">
               登録日時
               <!------ 昇順降順ボタン ------>
               <form style="display:inline-block;" action="members.php?page=<?=$current_page?>" method="POST">
-                <?php if(isset($_POST['asc'])):?>
+                <?php if(isset($_POST['asc']) || isset($_GET['asc'])):?>
                   <input type="hidden" name="desc">
-                    <button class="arrow" type="submit" value="▼">▼</button>
+                  <button class="arrow" type="submit" value="▼">▼</button>
                 <?php elseif(isset($_POST['desc']) || empty($_POST['desc'])):?>
                   <input type="hidden" name="asc">
-                    <button class="arrow" type="submit" value="▼">▼</button>
+                  <button class="arrow" type="submit" value="▼">▼</button>
                 <?php endif ?>
               </form>
             </th>
+            <th>編集</th>
           </tr>
         </thead>
         <?php if(!empty($members)):?>
@@ -320,7 +327,12 @@ empty($_SESSION['free_word'])
                   ?>
                 </td>
                 <td class="member_td"><?= $member['pref_name'].$member['address']?></td>
-                <td><?= date('Y/m/d', strtotime($member['created_at']))?></td>
+                <td class="member_td"><?= date('Y/m/d', strtotime($member['created_at']))?></td>
+                <td>
+                  <a href="member_edit.php?id=<?=$member['id']?>" style="text-decoration:none;">
+                    編集
+                  </a>
+                </td>
               </tr>
             </tbody>
           <?php endforeach?>
@@ -329,7 +341,14 @@ empty($_SESSION['free_word'])
       <!------ 前へボタン ------>
       <div class="pagination_btns">
         <?php if($current_page > 1):?>
-          <a class="page_btn back_page" href="members.php?page=<?=$current_page - 1?>&transition=true">＜前へ </a>
+          <?php
+            $back_page = $current_page - 1;
+            if(isset($_POST['asc']) || isset($_GET['asc'])) {
+              echo "<a class='page_btn next_page' href='members.php?page=$back_page&transition=true&asc=true'>＜前へ</a>";
+            } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+              echo "<a class='page_btn' href='members.php?page=$back_page&transition=true&desc=true'>＜前へ</a>";
+            }
+          ?>
         <?php endif ?>
             <!------ ページネーションボタン ------>
         <!-- page_numが3以上の時 -->
@@ -341,14 +360,22 @@ empty($_SESSION['free_word'])
               if($i==1) {
                 echo "<span class='now_page_btn'>$i</span>";
               } else {
-                echo "<a class='page_btn' href='members.php?page=$i&transition=true'>$i</a>";
+                if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&asc=true'>$i</a>";
+                } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&desc=true'>$i</a>";
+                }
               }
             }
           // current_pageがmaxの時
           } elseif($current_page == $page_num) {
             for($i=$current_page-2; $i<=$current_page; $i++) {
               if($i<$current_page) {
-                echo "<a class='page_btn' href='members.php?page=$i&transition=true'>$i</a>";
+                if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&asc=true'>$i</a>";
+                } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&desc=true'>$i</a>";
+                }
               } else {
                 echo "<span class='now_page_btn'>$i</span>";
               }
@@ -359,7 +386,11 @@ empty($_SESSION['free_word'])
               if($i==$current_page) {
                 echo "<span class='now_page_btn'>$i</span>";
               } else {
-                echo "<a class='page_btn' href='members.php?page=$i&transition=true'>$i</a>";
+                if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&asc=true'>$i</a>";
+                } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                  echo "<a class='page_btn' href='members.php?page=$i&transition=true&desc=true'>$i</a>";
+                }
               }
             }
           }
@@ -370,14 +401,25 @@ empty($_SESSION['free_word'])
             if($i == $current_page) {
               echo "<span class='now_page_btn'>$i</span>";
             } else {
-              echo "<a class='page_btn' href='members.php?page=$i&transition=true'>$i</a>";
+              if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                echo "<a class='page_btn' href='members.php?page=$i&transition=true&asc=true'>$i</a>";
+              } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                echo "<a class='page_btn' href='members.php?page=$i&transition=true&desc=true'>$i</a>";
+              }
             }
           }
           ?>
         <?php endif ?>
         <!------ 次へボタン ------>
         <?php if($current_page < $page_num):?>
-          <a class="page_btn next_page" href="members.php?page=<?=$current_page + 1?>&transition=true">次へ＞</a>
+            <?php
+              $next_page = $current_page + 1;
+              if(isset($_POST['asc']) || isset($_GET['asc'])) {
+                echo "<a class='page_btn next_page' href='members.php?page=$next_page&transition=true&asc=true'>次へ＞</a>";
+              } elseif (isset($_POST['desc']) || empty($_POST['desc'])) {
+                echo "<a class='page_btn' href='members.php?page=$next_page&transition=true&desc=true'>次へ＞</a>";
+              }
+            ?>
         <?php endif ?>
       </div>
     </div>
